@@ -1,0 +1,42 @@
+{
+  "name": "hive-mcp-log",
+  "version": "1.0.0",
+  "description": "Inbound structured-log ingestion shim. $0.0001/log line via x402, retention tiers (1d free, 7d $0.005/MB, 30d $0.02/MB), tail + search endpoints. Settlement: USDC on Base L2. MCP 2024-11-05.",
+  "type": "module",
+  "main": "server.js",
+  "bin": {
+    "hive-mcp-log": "./server.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "mcp",
+    "hive",
+    "log",
+    "logging",
+    "observability",
+    "x402",
+    "402",
+    "ai-agents",
+    "a2a",
+    "usdc",
+    "base-l2"
+  ],
+  "author": "Steve Rotzin <steve@thehiveryiq.com> (https://www.thehiveryiq.com)",
+  "license": "MIT",
+  "homepage": "https://github.com/srotzin/hive-mcp-log",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/srotzin/hive-mcp-log"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "ethers": "^6.13.2",
+    "express": "^4.19.2"
+  }
+}

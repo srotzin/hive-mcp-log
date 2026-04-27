@@ -1,0 +1,169 @@
+# Smithery Registry — hive-mcp-log
+# https://smithery.ai
+
+startCommand:
+  type: http
+  configSchema:
+    type: object
+    properties: {}
+    required: []
+  url: https://hive-mcp-log.onrender.com/mcp
+
+name: hive-mcp-log
+displayName: hive-mcp-log — Inbound structured-log ingestion
+version: "1.0.0"
+description: >
+  Inbound structured-log ingestion shim for autonomous agents. NDJSON
+  ingestion at $0.0001/log line via x402, retention tiers (1d free,
+  7d $0.005/MB, 30d $0.02/MB), tail + search endpoints. Pure protocol —
+  inbound only, no outbound calls. MCP 2024-11-05, USDC on Base L2.
+
+author:
+  name: Steve Rotzin
+  email: steve@thehiveryiq.com
+  url: https://www.thehiveryiq.com
+
+license: MIT
+homepage: https://github.com/srotzin/hive-mcp-log
+repository:
+  type: git
+  url: https://github.com/srotzin/hive-mcp-log
+
+transport: streamable-http
+endpoint: https://hive-mcp-log.onrender.com/mcp
+protocol: "2024-11-05"
+
+categories:
+  - observability
+  - logging
+  - agent-to-agent
+  - web3
+  - infrastructure
+
+tags:
+  - mcp
+  - hive
+  - log
+  - logging
+  - observability
+  - x402
+  - 402
+  - ai-agents
+  - a2a
+  - usdc
+  - base-l2
+
+tools:
+  - name: log_ingest
+    description: >
+      Ingest a structured log batch (NDJSON, max 4 MB / 10k lines per call).
+      $0.0001/line + retention surcharge per tier.
+    inputs:
+      - name: did
+        type: string
+        required: true
+        description: "Calling DID, e.g. did:hive:agent-foo"
+      - name: lines
+        type: array
+        required: true
+        description: "Array of log objects (ts/severity/tag/msg)"
+      - name: retention_class
+        type: string
+        required: false
+        description: "1d (free), 7d, or 30d"
+      - name: tx_hash
+        type: string
+        required: false
+        description: "Base L2 USDC tx hash for synchronous verification"
+  - name: log_tail
+    description: Return last N log lines for the calling DID. Tier 0, free.
+    inputs:
+      - name: did
+        type: string
+        required: true
+      - name: n
+        type: integer
+        required: false
+        description: "Max 500, default 50"
+  - name: log_search
+    description: >
+      Search logs by time range, severity, tag, free-text. Tier 0 own-DID.
+    inputs:
+      - name: did
+        type: string
+        required: true
+      - name: since_ms
+        type: integer
+        required: false
+      - name: until_ms
+        type: integer
+        required: false
+      - name: severity
+        type: string
+        required: false
+      - name: tag
+        type: string
+        required: false
+      - name: q
+        type: string
+        required: false
+      - name: limit
+        type: integer
+        required: false
+      - name: cursor
+        type: integer
+        required: false
+  - name: log_retention_get
+    description: Return current retention tier + bytes stored. Tier 0, free.
+    inputs:
+      - name: did
+        type: string
+        required: true
+  - name: log_retention_set
+    description: Set retention tier (1d/7d/30d).
+    inputs:
+      - name: did
+        type: string
+        required: true
+      - name: tier
+        type: string
+        required: true
+  - name: log_today
+    description: Today aggregate — ingests, lines, bytes, charge_usd.
+    inputs: []
+
+runtime:
+  type: node
+  version: ">=18"
+  command: node server.js
+  env:
+    - name: PORT
+      default: "3000"
+      required: false
+    - name: ENABLE
+      default: "true"
+      required: false
+    - name: WALLET_ADDRESS
+      default: "0x15184bf50b3d3f52b60434f8942b7d52f2eb436e"
+      required: false
+    - name: SOLANA_WALLET
+      default: "B1N61cuL35fhskWz5dw8XqDyP6LWi3ZWmq8CNA9L3FVn"
+      required: false
+    - name: USDC_BASE
+      default: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      required: false
+    - name: BASE_RPC
+      default: "https://mainnet.base.org"
+      required: false
+    - name: PUBLIC_BASE_URL
+      default: "https://hive-mcp-log.onrender.com"
+      required: false
+    - name: MAX_LINES_PER_INGEST
+      default: "10000"
+      required: false
+    - name: MAX_BYTES_PER_INGEST
+      default: "4194304"
+      required: false
+    - name: RETENTION_SWEEP_MS
+      default: "3600000"
+      required: false
