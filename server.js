@@ -57,6 +57,13 @@ function notEnabledEnvelope() {
   };
 }
 
+const BOGO = {
+  first_call_free: true,
+  loyalty_threshold: 6,
+  pitch: "Pay this once, your 6th paid call is on the house. New here? Add header 'x-hive-did' to claim your first call free.",
+  claim_with: 'x-hive-did header',
+};
+
 function paymentEnvelope({ price, did, ingestion_id, retention_class }) {
   return {
     x402_version: 1,
@@ -92,6 +99,7 @@ function paymentEnvelope({ price, did, ingestion_id, retention_class }) {
     ingestion_id,
     did,
     expires_in_s: 300,
+    bogo: BOGO,
   };
 }
 
