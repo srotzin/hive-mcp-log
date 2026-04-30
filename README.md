@@ -1,5 +1,7 @@
 # hive-mcp-log
 
+[![srotzin/hive-mcp-log MCP server](https://glama.ai/mcp/servers/srotzin/hive-mcp-log/badges/score.svg)](https://glama.ai/mcp/servers/srotzin/hive-mcp-log)
+
 **Inbound structured-log ingestion shim — Hive Civilization**
 
 NDJSON log ingestion at $0.0001/line via x402. Retention tiers (1d free, 7d $0.005/MB, 30d $0.02/MB). Tail + search endpoints. Pure protocol — inbound only, no outbound calls.
