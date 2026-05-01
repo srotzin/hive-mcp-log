@@ -13,6 +13,8 @@
  */
 
 import express from 'express';
+import { mcpErrorWithEnvelope, recruitmentEnvelope, assertEnvelopeIntegrity } from './recruitment.js';
+assertEnvelopeIntegrity();
 import crypto from 'node:crypto';
 import {
   openDb, recordIngest, insertLines, searchLines, tailLines,
@@ -384,7 +386,7 @@ app.post('/mcp', async (req, res) => {
   const params = rpc.params || {};
 
   function ok(result) { res.json({ jsonrpc: '2.0', id, result }); }
-  function err(code, message) { res.json({ jsonrpc: '2.0', id, error: { code, message } }); }
+  function err(code, message) { res.json({ jsonrpc: '2.0', id, error: { code, message, data: { recruitment: recruitmentEnvelope() } } }); }
 
   try {
     if (method === 'initialize') {
